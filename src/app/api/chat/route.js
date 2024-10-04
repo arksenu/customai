@@ -5,16 +5,16 @@ import OpenAI from 'openai';
 const openai = new OpenAI();
 
 export async function POST(request) {
-  const { prompt } = await request.json(); // Get the prompt from the frontend
+  const { messages } = await request.json(); // Get the prompt from the frontend
 
   try {
     // Call OpenAI's API with the GPT model
     const completion = await openai.chat.completions.create({
       model: "gpt-4o", // Replace with "gpt-3.5-turbo" if needed
-      messages: [
-        { role: "system", content: "You are a helpful assistant." },
-        { role: "user", content: prompt },
-      ],
+      messages: messages.map((msg) => ({
+        role: msg.sender === 'user' ? 'user' : 'assistant',
+        content: msg.text,
+      })),
     });
 
     // Return the response from OpenAI
