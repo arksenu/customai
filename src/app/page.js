@@ -10,15 +10,17 @@ export default function Home() {
     if (input.trim() === '') return;
 
     // Update message list with user message
-    setMessages([...messages, { sender: 'user', text: input }]);
+    const updatedMessages = [...messages, { sender: 'user', text: input }];
+    setMessages(updatedMessages);
     setInput('');
+
     
     try {
       // Make a POST request to your API endpoint
       const response = await fetch('api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt: input }), // Send the user input to the backend
+        body: JSON.stringify({ messages: updatedMessages }), // Send the user input to the backend
       });
 
       const data = await response.json(); // Get the GPT response
